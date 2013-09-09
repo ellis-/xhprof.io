@@ -175,7 +175,7 @@ class Data
 			$request['uri_id']		= $this->db->lastInsertId();
 		}
 		
-		$sth	= $this->db->prepare("INSERT INTO `requests` SET `request_host_id` = :request_host_id, `request_uri_id` = :request_uri_id, `request_method_id` = :request_method_id, `https` = :https;");
+		$sth	= $this->db->prepare("INSERT INTO `requests` SET request_caller_id = 0,  `request_host_id` = :request_host_id, `request_uri_id` = :request_uri_id, `request_method_id` = :request_method_id, `https` = :https;");
 		
 		$sth->bindValue(':request_host_id', $request['host_id'], PDO::PARAM_INT);
 		$sth->bindValue(':request_uri_id', $request['uri_id'], PDO::PARAM_INT);
@@ -192,6 +192,7 @@ class Data
 		
 		foreach($xhprof_data as $call => $data)
 		{
+			$data['mu'] = abs($data['mu']); // issue 49 fix
 			$sth1->bindValue(':request_id', $request_id, PDO::PARAM_INT);
 			$sth1->bindValue(':ct', $data['ct'], PDO::PARAM_INT);
 			$sth1->bindValue(':wt', $data['wt'], PDO::PARAM_INT);
